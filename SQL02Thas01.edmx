@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="SQL02Thas01Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'thas01.Planning.MRPExceptionLog' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="MRPExceptionLog">
+          <Key>
+            <PropertyRef Name="MRPID" />
+          </Key>
+          <Property Name="MRPID" Type="int" Nullable="false" />
+          <Property Name="StoredProcedure" Type="nvarchar" MaxLength="50" />
+          <Property Name="PartID" Type="int" />
+          <Property Name="MethodID" Type="int" />
+          <Property Name="VersionID" Type="int" />
+          <Property Name="AccountNumber" Type="int" />
+          <Property Name="OrderNumber" Type="nvarchar" MaxLength="15" />
+          <Property Name="LineNumber" Type="nvarchar" MaxLength="5" />
+          <Property Name="Error" Type="nvarchar" MaxLength="1000" />
+        </EntityType>
+        <EntityType Name="MRPLock">
+          <Key>
+            <PropertyRef Name="MRPLockID" />
+          </Key>
+          <Property Name="MRPLockID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MRPEmpID" Type="int" Nullable="false" />
+          <Property Name="LastModifiedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MRPLog">
+          <Key>
+            <PropertyRef Name="MRPID" />
+          </Key>
+          <Property Name="MRPID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmployeeID" Type="int" Nullable="false" />
+          <Property Name="StartMRPOn" Type="datetime" Nullable="false" />
+          <Property Name="FinishMRPOn" Type="datetime" />
+          <Property Name="MRPStatus" Type="smallint" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_MRPExceptionLog_MRPLog">
+          <End Role="MRPLog" Type="Self.MRPLog" Multiplicity="1" />
+          <End Role="MRPExceptionLog" Type="Self.MRPExceptionLog" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="MRPLog">
+              <PropertyRef Name="MRPID" />
+            </Principal>
+            <Dependent Role="MRPExceptionLog">
+              <PropertyRef Name="MRPID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="THAS_CONNECT_MRPChecker" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="THAS" />
+        <EntityContainer Name="SQL02Thas01ModelStoreContainer">
+          <EntitySet Name="MRPLock" EntityType="Self.MRPLock" Schema="Planning" store:Type="Tables" />
+          <EntitySet Name="MRPLog" EntityType="Self.MRPLog" Schema="Planning" store:Type="Tables" />
+          <EntitySet Name="MRPExceptionLog" EntityType="Self.MRPExceptionLog" store:Type="Tables" store:Schema="Planning">
+            <DefiningQuery>SELECT 
+    [MRPExceptionLog].[MRPID] AS [MRPID], 
+    [MRPExceptionLog].[StoredProcedure] AS [StoredProcedure], 
+    [MRPExceptionLog].[PartID] AS [PartID], 
+    [MRPExceptionLog].[MethodID] AS [MethodID], 
+    [MRPExceptionLog].[VersionID] AS [VersionID], 
+    [MRPExceptionLog].[AccountNumber] AS [AccountNumber], 
+    [MRPExceptionLog].[OrderNumber] AS [OrderNumber], 
+    [MRPExceptionLog].[LineNumber] AS [LineNumber], 
+    [MRPExceptionLog].[Error] AS [Error]
+    FROM [Planning].[MRPExceptionLog] AS [MRPExceptionLog]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_MRPExceptionLog_MRPLog" Association="Self.FK_MRPExceptionLog_MRPLog">
+            <End Role="MRPLog" EntitySet="MRPLog" />
+            <End Role="MRPExceptionLog" EntitySet="MRPExceptionLog" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SQL02Thas01Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="MRPLock">
+          <Key>
+            <PropertyRef Name="MRPLockID" />
+          </Key>
+          <Property Name="MRPLockID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MRPEmpID" Type="Int32" Nullable="false" />
+          <Property Name="LastModifiedDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="MRPLog">
+          <Key>
+            <PropertyRef Name="MRPID" />
+          </Key>
+          <Property Name="MRPID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmployeeID" Type="Int32" Nullable="false" />
+          <Property Name="StartMRPOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FinishMRPOn" Type="DateTime" Precision="3" />
+          <Property Name="MRPStatus" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="MRPExceptionLog" Relationship="Self.FK_MRPExceptionLog_MRPLog" FromRole="MRPLog" ToRole="MRPExceptionLog" />
+        </EntityType>
+        <EntityType Name="MRPExceptionLog">
+          <Key>
+            <PropertyRef Name="MRPID" />
+          </Key>
+          <Property Name="MRPID" Type="Int32" Nullable="false" />
+          <Property Name="StoredProcedure" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PartID" Type="Int32" />
+          <Property Name="MethodID" Type="Int32" />
+          <Property Name="VersionID" Type="Int32" />
+          <Property Name="AccountNumber" Type="Int32" />
+          <Property Name="OrderNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="LineNumber" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="Error" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MRPLog" Relationship="Self.FK_MRPExceptionLog_MRPLog" FromRole="MRPExceptionLog" ToRole="MRPLog" />
+        </EntityType>
+        <Association Name="FK_MRPExceptionLog_MRPLog">
+          <End Role="MRPLog" Type="Self.MRPLog" Multiplicity="1" />
+          <End Role="MRPExceptionLog" Type="Self.MRPExceptionLog" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="MRPLog">
+              <PropertyRef Name="MRPID" />
+            </Principal>
+            <Dependent Role="MRPExceptionLog">
+              <PropertyRef Name="MRPID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SQL02Thas01Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="MRPLocks" EntityType="Self.MRPLock" />
+          <EntitySet Name="MRPLogs" EntityType="Self.MRPLog" />
+          <EntitySet Name="MRPExceptionLogs" EntityType="Self.MRPExceptionLog" />
+          <AssociationSet Name="FK_MRPExceptionLog_MRPLog" Association="Self.FK_MRPExceptionLog_MRPLog">
+            <End Role="MRPLog" EntitySet="MRPLogs" />
+            <End Role="MRPExceptionLog" EntitySet="MRPExceptionLogs" />
+          </AssociationSet>
+          <FunctionImport Name="THAS_CONNECT_MRPChecker" ReturnType="Collection(SQL02Thas01Model.THAS_CONNECT_MRPChecker_Result)" />
+        </EntityContainer>
+        <ComplexType Name="THAS_CONNECT_MRPChecker_Result">
+          <Property Type="DateTime" Name="StartMRPOn" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="FinishMRPOn" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Result" Nullable="false" MaxLength="7" />
+          <Property Type="Int32" Name="Duration" Nullable="true" />
+          <Property Type="Int32" Name="New_WO_Suggs" Nullable="true" />
+          <Property Type="Int32" Name="New_PO_Suggs" Nullable="true" />
+          <Property Type="Int32" Name="Reschedule_WO_Suggs" Nullable="true" />
+          <Property Type="Int32" Name="Reschedule_PO_Suggs" Nullable="true" />
+          <Property Type="Int32" Name="Cancel_WO_Suggs" Nullable="true" />
+          <Property Type="Int32" Name="Cancel_PO_Suggs" Nullable="true" />
+          <Property Type="Int32" Name="MRPID" Nullable="false" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SQL02Thas01ModelStoreContainer" CdmEntityContainer="SQL02Thas01Entities">
+          <EntitySetMapping Name="MRPLocks">
+            <EntityTypeMapping TypeName="SQL02Thas01Model.MRPLock">
+              <MappingFragment StoreEntitySet="MRPLock">
+                <ScalarProperty Name="MRPLockID" ColumnName="MRPLockID" />
+                <ScalarProperty Name="MRPEmpID" ColumnName="MRPEmpID" />
+                <ScalarProperty Name="LastModifiedDate" ColumnName="LastModifiedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MRPLogs">
+            <EntityTypeMapping TypeName="SQL02Thas01Model.MRPLog">
+              <MappingFragment StoreEntitySet="MRPLog">
+                <ScalarProperty Name="MRPID" ColumnName="MRPID" />
+                <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+                <ScalarProperty Name="StartMRPOn" ColumnName="StartMRPOn" />
+                <ScalarProperty Name="FinishMRPOn" ColumnName="FinishMRPOn" />
+                <ScalarProperty Name="MRPStatus" ColumnName="MRPStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MRPExceptionLogs">
+            <EntityTypeMapping TypeName="SQL02Thas01Model.MRPExceptionLog">
+              <MappingFragment StoreEntitySet="MRPExceptionLog">
+                <ScalarProperty Name="MRPID" ColumnName="MRPID" />
+                <ScalarProperty Name="StoredProcedure" ColumnName="StoredProcedure" />
+                <ScalarProperty Name="PartID" ColumnName="PartID" />
+                <ScalarProperty Name="MethodID" ColumnName="MethodID" />
+                <ScalarProperty Name="VersionID" ColumnName="VersionID" />
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+                <ScalarProperty Name="LineNumber" ColumnName="LineNumber" />
+                <ScalarProperty Name="Error" ColumnName="Error" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="THAS_CONNECT_MRPChecker" FunctionName="SQL02Thas01Model.Store.THAS_CONNECT_MRPChecker">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SQL02Thas01Model.THAS_CONNECT_MRPChecker_Result">
+                <ScalarProperty Name="StartMRPOn" ColumnName="StartMRPOn" />
+                <ScalarProperty Name="FinishMRPOn" ColumnName="FinishMRPOn" />
+                <ScalarProperty Name="Result" ColumnName="Result" />
+                <ScalarProperty Name="Duration" ColumnName="Duration" />
+                <ScalarProperty Name="New_WO_Suggs" ColumnName="New WO Suggs" />
+                <ScalarProperty Name="New_PO_Suggs" ColumnName="New PO Suggs" />
+                <ScalarProperty Name="Reschedule_WO_Suggs" ColumnName="Reschedule WO Suggs" />
+                <ScalarProperty Name="Reschedule_PO_Suggs" ColumnName="Reschedule PO Suggs" />
+                <ScalarProperty Name="Cancel_WO_Suggs" ColumnName="Cancel WO Suggs" />
+                <ScalarProperty Name="Cancel_PO_Suggs" ColumnName="Cancel PO Suggs" />
+                <ScalarProperty Name="MRPID" ColumnName="MRPID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
