@@ -37,7 +37,7 @@ namespace TASSysMon
             serviceStatus.dwWaitHint = 100000;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 
-            eventLog1.WriteEntry("Started... Deploy 1st April 2020");
+            eventLog1.WriteEntry("Started... Deploy 2nd April 2020 - 09:15:00");
             Timer timer = new Timer();
             timer.Interval = 60000;
             timer.Elapsed += new ElapsedEventHandler(this.onTimer);
@@ -54,6 +54,8 @@ namespace TASSysMon
 
             TimeSpan checkTimeStart = new TimeSpan(07, 00, 30);
             TimeSpan checkTimeEnd = new TimeSpan(07, 01, 30);
+            //TimeSpan checkTimeStart = new TimeSpan(09, 00, 30);
+            //TimeSpan checkTimeEnd = new TimeSpan(09, 01, 30);
             TimeSpan timeNow = DateTime.Now.TimeOfDay;
 
             if ((timeNow >= checkTimeStart) && (timeNow <= checkTimeEnd))
@@ -104,8 +106,7 @@ namespace TASSysMon
                                         + "PO New Suggestions: <b>" + MRPMonitorEntry.NewPOSuggs + "</b>. </br>WO New Suggestions: <b>" + MRPMonitorEntry.NewWOSuggs 
                                         + "</b>. </br>PO Reschedules: <b>" + MRPMonitorEntry.ReschedulePOSuggs + "</b>. </br>WO Reschedules <b>" + MRPMonitorEntry.RescheduleWOSuggs
                                         + "</b>. </br>PO Cancellations: <b>" + MRPMonitorEntry.CancelPOSuggs + "</b>. </br>WO Cancellations: <b>" + MRPMonitorEntry.CancelWOSuggs
-                                        + "</b>. </br></br>Dont Forget To Wash Your Hands."
-                                        + "</br></br>Take Care & God Bless.");
+                                        + "</b>.");
                                 }
                                 else
                                 {
@@ -194,8 +195,8 @@ namespace TASSysMon
             try
             {
                 string from = "MRPJobMonitor@thompsonaero.com";
+                //string addresses = "sean.kelly@thompsonaero.com";
                 string addresses = "felix.curran@thompsonaero.com;sean.kelly@thompsonaero.com; chris.weeks@thompsonaero.com; brendan.mcclenaghan@thompsonaero.com";
-                //string to = "sean.kelly@thompsonaero.com";
 
                 using (MailMessage mail = new MailMessage(from, addresses.Replace(";",",")))
                 {
